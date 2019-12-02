@@ -22,6 +22,7 @@
   "dependencies": {
     "commander": "^4.0.1",
     "esm": "^3.2.25",
-    "inquirer": "^7.0.0"
+    "inquirer": "^7.0.0",
+    "listr": "^0.14.3"
   }
 }
