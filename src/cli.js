@@ -1,5 +1,6 @@
 import program from "commander";
 import inquirer from "inquirer";
+import { createProject } from "./main";
 import packageDotJson from "../package.json";
 
 const defaultTemplate = "TypeScript";
@@ -27,7 +28,9 @@ function parseProgramOptions(args) {
 async function promptForMissingOptions(options) {
   if (options.skipPrompts && options.name) {
     return {
-      ...options,
+      name: options.name,
+      git: options.git,
+      install: options.install,
       template: options.template || defaultTemplate
     };
   }
@@ -38,7 +41,10 @@ async function promptForMissingOptions(options) {
       type: "input",
       name: "name",
       message: "Give a project name",
-      default: ""
+      default: "",
+      validate: value => {
+        return value ? true : false;
+      }
     });
   }
 
@@ -71,7 +77,7 @@ async function promptForMissingOptions(options) {
 
   const answers = await inquirer.prompt(questions);
   return {
-    ...options,
+    name: options.name || answers.name,
     template: options.template || answers.template,
     git: options.git || answers.git,
     install: options.install || answers.install
@@ -81,5 +87,5 @@ async function promptForMissingOptions(options) {
 export async function cli(args) {
   let options = parseProgramOptions(args);
   options = await promptForMissingOptions(options);
-  console.log(options);
+  await createProject(options);
 }
